@@ -26,6 +26,7 @@
 
 import sys
 import os
+import io
 import json
 import logging
 import base64
@@ -65,12 +66,20 @@ class KeyVaultAgent(object):
         if not os.path.isfile(file_path):
             raise Exception("Service Principle file doesn't exist: %s" % file_path)
 
-        with open(file_path, 'r') as sp_file:
-            sp_data = json.load(sp_file)
-            # retrieve the relevant values used to authenticate with Key Vault
-            self.tenant_id = sp_data['tenantId']
-            self.client_id = sp_data['aadClientId']
-            self.client_secret = sp_data['aadClientSecret']
+        if sys.platform == "win32":
+            with io.open(file_path, 'r', encoding='utf-16') as sp_file:
+                sp_data = json.load(sp_file)
+                # retrieve the relevant values used to authenticate with Key Vault
+                self.tenant_id = sp_data['tenantId']
+                self.client_id = sp_data['aadClientId']
+                self.client_secret = sp_data['aadClientSecret']
+        else:
+            with open(file_path, 'r') as sp_file:
+                sp_data = json.load(sp_file)
+                # retrieve the relevant values used to authenticate with Key Vault
+                self.tenant_id = sp_data['tenantId']
+                self.client_id = sp_data['aadClientId']
+                self.client_secret = sp_data['aadClientSecret']
 
         _logger.info('Parsing Service Principle file completed')
 

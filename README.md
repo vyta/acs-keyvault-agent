@@ -25,10 +25,15 @@ When creating Kubernetes secrets objects -
 # How to use it
 * Config your Azure Key Vault to give your cluster's service principle a "get" permission so it can grab secrets
 * Clone the project to your desired folder 
-* Build the agent image using docker
+* Build the agent image using docker (Linux)
 ```
 cd <project_root>
 docker build . -t <image_tag>
+```
+* Build the agent image using docker (Windows)
+```
+cd <project_root>
+docker build . -t <image_tag> -f windows.Dockerfile
 ```
 * Push the agent image to your image repository
 ```
